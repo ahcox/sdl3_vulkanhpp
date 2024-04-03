@@ -14,6 +14,10 @@ project(monorepo)
 # Create an option to switch between a system sdl library and a vendored SDL library
 option(MONOREPO_LOCAL_SDL3 "Use SDL stored under thirdparty as a submodule" ON)
 
+# List of all the libraries and apps in the monorepo with an option
+# to enable/disable them.
+option(MONOREPO_SDL3_CALLBACKS "Simple app opening an SDL3 window and responding to callbacks rather than having a main function." OFF)
+
 if(MONOREPO_LOCAL_SDL3)
     add_subdirectory(thirdparty/sdl3)
 else()
@@ -21,4 +25,8 @@ else()
     # 2. look for the SDL3-shared component, and
     # 3. fail if the shared component cannot be found.
     find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3-shared)
+endif()
+
+if(MONOREPO_SDL3_CALLBACKS)
+    add_subdirectory(playground/sdl3/sdl3_main_callbacks)
 endif()
