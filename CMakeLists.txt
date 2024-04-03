@@ -16,7 +16,8 @@ option(MONOREPO_LOCAL_SDL3 "Use SDL stored under thirdparty as a submodule" ON)
 
 # List of all the libraries and apps in the monorepo with an option
 # to enable/disable them.
-option(MONOREPO_SDL3_CALLBACKS "Simple app opening an SDL3 window and responding to callbacks rather than having a main function." OFF)
+option(MONOREPO_SDL3_CALLBACKS "Simple app responding to callbacks rather than having a main function." OFF)
+option(MONOREPO_SDL3_WINDOW "Simple app opening an SDL3 window and responding to callbacks." OFF)
 
 if(MONOREPO_LOCAL_SDL3)
     add_subdirectory(thirdparty/sdl3)
@@ -29,4 +30,8 @@ endif()
 
 if(MONOREPO_SDL3_CALLBACKS)
     add_subdirectory(playground/sdl3/sdl3_main_callbacks)
+endif()
+
+if(MONOREPO_SDL3_WINDOW)
+    add_subdirectory(playground/sdl3/sdl3_window)
 endif()
