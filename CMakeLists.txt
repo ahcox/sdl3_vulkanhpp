@@ -21,6 +21,7 @@ option(MONOREPO_LOCAL_VULKAN_HPP "Use vulkan.hpp stored under thirdparty as a su
 # to enable/disable them.
 option(MONOREPO_SDL3_CALLBACKS "Simple app responding to callbacks rather than having a main function." OFF)
 option(MONOREPO_SDL3_WINDOW "Simple app opening an SDL3 window and responding to callbacks." OFF)
+option(MONOREPO_SDL3_VULKAN_HPP_CLEAR "Simple app opening an SDL3 window, binding Vulkan to it, and clearing the surface with Vulkan." OFF)
 
 if(MONOREPO_LOCAL_SDL3)
     add_subdirectory(thirdparty/sdl3)
@@ -47,3 +48,6 @@ if(MONOREPO_SDL3_WINDOW)
     add_subdirectory(playground/sdl3/sdl3_window)
 endif()
 
+if(MONOREPO_SDL3_VULKAN_HPP_CLEAR)
+    add_subdirectory(playground/sdl3/sdl3_vulkan_hpp_clear)
+endif()
