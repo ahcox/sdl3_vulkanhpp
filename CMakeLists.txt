@@ -11,8 +11,11 @@
 cmake_minimum_required(VERSION 3.5)
 project(monorepo)
 
-# Create an option to switch between a system sdl library and a vendored SDL library
+# Create an option to switch between a system sdl library and a local SDL library
 option(MONOREPO_LOCAL_SDL3 "Use SDL stored under thirdparty as a submodule" ON)
+# Create an option to switch between platform vulkan.hpp headers and a local submodule
+# I don't need to go in and build the header generators -
+option(MONOREPO_LOCAL_VULKAN_HPP "Use vulkan.hpp stored under thirdparty as a submodule" ON)
 
 # List of all the libraries and apps in the monorepo with an option
 # to enable/disable them.
@@ -28,6 +31,14 @@ else()
     find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3-shared)
 endif()
 
+# I don't need to go in and build the header generators, I just use the generated headers already in the repo.
+if(MONOREPO_LOCAL_VULKAN_HPP)
+    add_subdirectory(thirdparty/vulkan-hpp)
+else()
+    find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS vulkan-hpp)
+endif()
+
+
 if(MONOREPO_SDL3_CALLBACKS)
     add_subdirectory(playground/sdl3/sdl3_main_callbacks)
 endif()
@@ -35,3 +46,4 @@ endif()
 if(MONOREPO_SDL3_WINDOW)
     add_subdirectory(playground/sdl3/sdl3_window)
 endif()
+

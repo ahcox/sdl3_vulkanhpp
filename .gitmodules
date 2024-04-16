@@ -1,3 +1,6 @@
 [submodule "thirdparty/sdl3"]
 	path = thirdparty/sdl3
 	url = git@github.com:libsdl-org/SDL.git
+[submodule "thirdparty/vulkan-hpp"]
+	path = thirdparty/vulkan-hpp
+	url = https://github.com/KhronosGroup/Vulkan-Hpp.git
