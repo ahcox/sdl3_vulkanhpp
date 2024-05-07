@@ -4,8 +4,13 @@
 #include <iostream>
 
 namespace {
-    /// The window we'll open to show our rendering inside.
-    SDL_Window* window {nullptr};
+    struct AppState
+    {
+        /// The window we'll open to show our rendering inside.
+        SDL_Window *window{nullptr};
+        /// Count of the number of times the main loop has been run.
+        long long iterations{0};
+    };
 }
 
 extern "C" {
@@ -14,21 +19,18 @@ int SDL_AppInit(void **appstate, int argc, char **argv)
 {
     std::cerr << "SDL_AppInit" << std::endl;
 
+    *appstate = new AppState;
+    AppState& state = *static_cast<AppState*>(*appstate);
+
     int result = 0;
     if(result = SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0)
     {
         std::cerr << "SDL_InitSubSystem failed with code " << result << std::endl;
         goto error_exit;
     }
-    SDL_SetEventEnabled(SDL_EVENT_TERMINATING, SDL_TRUE);
-    SDL_SetEventEnabled(SDL_EVENT_DID_ENTER_BACKGROUND, SDL_TRUE);
-    SDL_SetEventEnabled(SDL_EVENT_DID_ENTER_FOREGROUND, SDL_TRUE);
-    SDL_SetEventEnabled(SDL_EVENT_KEY_DOWN, SDL_TRUE);
-    SDL_SetEventEnabled(SDL_EVENT_KEY_UP, SDL_TRUE);
-    SDL_SetEventEnabled(SDL_EVENT_MOUSE_MOTION, SDL_TRUE);
 
-    window = SDL_CreateWindow( "SDL3 Window", 960, 540, 0 /* | SDL_WINDOW_VULKAN*/ );
-    if( window == NULL )
+    state.window = SDL_CreateWindow( "SDL3 Window", 960, 540, 0 /* | SDL_WINDOW_VULKAN*/ );
+    if( state.window == NULL )
     {
         std::cerr << "SDL_CreateWindow failed" << std::endl;
         goto error_exit;
@@ -43,8 +45,8 @@ int SDL_AppInit(void **appstate, int argc, char **argv)
 
 int SDL_AppIterate(void *appstate)
 {
-    static thread_local int i = 0;
-    ++i;
+    AppState& state = *static_cast<AppState*>(appstate);
+    ++state.iterations;
     return 0;
 }
 
@@ -66,7 +68,9 @@ int SDL_AppEvent(void *appstate, const SDL_Event *event)
 
 void SDL_AppQuit(void *appstate)
 {
-    std::cerr << "SDL_AppQuit" << std::endl;
+    AppState* state = static_cast<AppState*>(appstate);
+    std::cerr << "SDL_AppQuit after " << state->iterations << " iterations of the main loop." << std::endl;
+    delete state;
     return;
 }
 
